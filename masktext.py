@@ -3,9 +3,18 @@ import numpy as np
 from moviepy.editor import VideoFileClip
 
 def remove_text_from_frame(frame):
+    # Dynamically determine the frame dimensions
+    height, width, _ = frame.shape
+    
     # Define the area where the text and phone number are located
-    # Adjust these coordinates based on the specific location of the text in the frame
-    x_start, y_start, x_end, y_end = 1000, 700, 1280, 720  # Example values, adjust them
+    # For example, let's assume the text is located in the bottom right corner
+    # We will take a portion of the bottom right area as ROI
+    x_start = int(width * 0.75)  # Starting at 75% of the width
+    y_start = int(height * 0.9)  # Starting at 90% of the height
+    x_end = width                # End at the full width
+    y_end = height               # End at the full height
+
+    # Extract the region of interest (ROI)
     roi = frame[y_start:y_end, x_start:x_end]
 
     # Ensure ROI is in the correct format (uint8 type)
@@ -19,9 +28,6 @@ def remove_text_from_frame(frame):
     
     # Ensure roi is a proper BGR image and mask is a grayscale image
     if len(roi.shape) == 3 and roi.shape[2] == 3 and mask.ndim == 2:
-        print(f"ROI shape: {roi.shape}, dtype: {roi.dtype}")
-        print(f"Mask shape: {mask.shape}, dtype: {mask.dtype}")
-
         inpainted_roi = cv2.inpaint(roi, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
         # Replace the original area with the inpainted area
         frame[y_start:y_end, x_start:x_end] = inpainted_roi
