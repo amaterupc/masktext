@@ -3,12 +3,13 @@ import numpy as np
 from moviepy.editor import VideoFileClip
 
 def remove_text_from_frame(frame):
+    # Convert the frame to a writable array
+    frame = np.array(frame, copy=True)
+
     # Dynamically determine the frame dimensions
     height, width, _ = frame.shape
     
     # Define the area where the text and phone number are located
-    # For example, let's assume the text is located in the bottom right corner
-    # We will take a portion of the bottom right area as ROI
     x_start = int(width * 0.75)  # Starting at 75% of the width
     y_start = int(height * 0.9)  # Starting at 90% of the height
     x_end = width                # End at the full width
