@@ -1,3 +1,4 @@
+import sys
 import cv2
 import numpy as np
 from moviepy.editor import VideoFileClip
@@ -37,15 +38,17 @@ def remove_text_from_frame(frame):
 
 def process_video(input_path, output_path):
     clip = VideoFileClip(input_path)
-    
+
     # Apply the remove_text_from_frame function to each frame
     processed_clip = clip.fl_image(remove_text_from_frame)
-    
+
+    # Preserve the audio
+    processed_clip = processed_clip.set_audio(clip.audio)
+
     # Write the processed video to a file
-    processed_clip.write_videofile(output_path, codec='libx264')
+    processed_clip.write_videofile(output_path, codec='libx264', audio_codec='aac')
 
 if __name__ == "__main__":
-    import sys
     if len(sys.argv) != 3:
         print("Usage: python remove_text_from_video.py <input_video_path> <output_video_path>")
         sys.exit(1)
