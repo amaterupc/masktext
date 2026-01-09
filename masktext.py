@@ -8,6 +8,9 @@ def remove_text_from_frame(frame):
     x_start, y_start, x_end, y_end = 1000, 700, 1280, 720  # Example values, adjust them
     roi = frame[y_start:y_end, x_start:x_end]
 
+    # Ensure ROI is in the correct format (uint8 type)
+    roi = np.array(roi, dtype=np.uint8)
+
     # Create a mask of the same size as the ROI, initialized to all zeros
     mask = np.zeros(roi.shape[:2], dtype=np.uint8)
 
@@ -16,6 +19,9 @@ def remove_text_from_frame(frame):
     
     # Ensure roi is a proper BGR image and mask is a grayscale image
     if len(roi.shape) == 3 and roi.shape[2] == 3 and mask.ndim == 2:
+        print(f"ROI shape: {roi.shape}, dtype: {roi.dtype}")
+        print(f"Mask shape: {mask.shape}, dtype: {mask.dtype}")
+
         inpainted_roi = cv2.inpaint(roi, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
         # Replace the original area with the inpainted area
         frame[y_start:y_end, x_start:x_end] = inpainted_roi
