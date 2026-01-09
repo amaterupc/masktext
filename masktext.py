@@ -1,3 +1,4 @@
+import sys
 import cv2
 import numpy as np
 from moviepy.editor import VideoFileClip
@@ -31,10 +32,13 @@ def process_video(input_path, output_path):
     # Write the processed video to a file
     processed_clip.write_videofile(output_path, codec='libx264')
 
-# Paths to your input and output videos
-input_video_path = "input_video.mp4"
-output_video_path = "output_video.mp4"
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python remove_text_from_video.py <input_video_path> <output_video_path>")
+        sys.exit(1)
 
-# Process the video
-process_video(input_video_path, output_video_path)
+    input_video_path = sys.argv[1]
+    output_video_path = sys.argv[2]
+
+    process_video(input_video_path, output_video_path)
 
